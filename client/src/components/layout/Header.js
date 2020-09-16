@@ -1,9 +1,12 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Preloader from './Preloader';
 
 const Header = ({ auth: { user, loading } }) => {
-  return (
+  return loading ? (
+    <Preloader />
+  ) : (
     <Fragment>
       <nav>
         <div className='nav-wrapper teal lighten-3'>
@@ -20,9 +23,9 @@ const Header = ({ auth: { user, loading } }) => {
               </Link>
             </li>
             <li>
-              <Link to='/logout'>
+              <a href='/api/logout'>
                 <i className='fas fa-sign-out-alt left'></i>Logout
-              </Link>
+              </a>
             </li>
           </ul>
         </div>

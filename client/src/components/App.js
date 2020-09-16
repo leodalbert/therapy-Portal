@@ -1,18 +1,16 @@
 import React, { Fragment, useEffect } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { fetchUser } from '../actions/user';
 import store from '../store';
 
 import 'materialize-css/dist/css/materialize.min.css';
+import 'materialize-social/css/materialize.min.css';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import '../App.css';
 
-import Header from './layout/Header';
 import Landing from './layout/Landing';
-import Dashboard from './dashboard/Dashboard';
-import Alert from './layout/Alert';
+import Routes from './routing/Routes';
 
-const SurveyNew = () => <h2>SurveryNew</h2>;
 const App = () => {
   useEffect(() => {
     // Init Materialize JS
@@ -23,15 +21,14 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <Router>
       <Fragment>
-        <Header />
-        <Alert />
-        <Route exact path='/' component={Landing} />
-        <Route exact path='/dashboard' component={Dashboard} />
-        <Route path='/surveys/new' component={SurveyNew} />
+        <Switch>
+          <Route exact path='/landing' component={Landing} />
+          <Route component={Routes} />
+        </Switch>
       </Fragment>
-    </BrowserRouter>
+    </Router>
   );
 };
 
