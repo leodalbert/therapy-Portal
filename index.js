@@ -4,16 +4,19 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const path = require('path');
 
+const connectDB = require('./config/db');
 const keys = require('./config/keys');
+require('./models/Appt');
+require('./models/ApptNote');
+require('./models/Client');
 require('./models/User');
+require('./models/ClientNote');
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
-
 const app = express();
+
+// Connect Database
+connectDB();
 
 app.use(
   cookieSession({
@@ -25,7 +28,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./routes/auth')(app);
+require('./routes/api/auth')(app);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

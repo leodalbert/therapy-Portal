@@ -1,0 +1,22 @@
+.alert-danger {
+  background: #ef5350;
+  color: #fff;
+  padding: 10px;
+}
+
+.alert-success {
+  background: #81c784;
+  color: #fff;
+  padding: 10px;
+}
+
+.alert-reminder {
+  background: #64b5f6;
+  color: #424242;
+  padding: 10px;
+}
+
+.modal-margin {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}

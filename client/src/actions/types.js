@@ -1,1 +1,13 @@
 export const FETCH_USER = 'FETCH_USER';
+export const SET_ALERT = 'SET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const GET_APPTS = 'GET_APPTS';
+export const ADD_APPT = 'ADD_APPT';
+export const DELETE_APPT = 'DELETE_APPT';
+export const EDIT_APPT = 'EDIT_APPT';
+export const SET_LOADING = 'SET_LOADING';
+export const ERROR = 'ERROR';
+export const GET_CLIENTS = 'GET_CLIENTS';
+export const ADD_CLIENT = 'ADD_CLIENT';
+export const REMOVE_CLIENT = 'REMOVE_CLIENT';
+export const UPDATE_CLIENT = 'UPDATE_CLIENT';

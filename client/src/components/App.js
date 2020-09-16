@@ -1,30 +1,38 @@
 import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as actions from '../actions';
+import { fetchUser } from '../actions/user';
+import store from '../store';
 
-import Header from './Header';
-import Landing from './Landing';
+import 'materialize-css/dist/css/materialize.min.css';
+import M from 'materialize-css/dist/js/materialize.min.js';
+import '../App.css';
 
-const Dashboard = () => <h2>dashboard</h2>;
+import Header from './layout/Header';
+import Landing from './layout/Landing';
+import Dashboard from './dashboard/Dashboard';
+import Alert from './layout/Alert';
+
 const SurveyNew = () => <h2>SurveryNew</h2>;
-const App = (actions) => {
+const App = () => {
   useEffect(() => {
-    actions.fetchUser();
-  }, [actions]);
+    // Init Materialize JS
+    M.AutoInit();
+  });
+  useEffect(() => {
+    store.dispatch(fetchUser());
+  }, []);
 
   return (
-    <div className='container'>
-      <BrowserRouter>
-        <Fragment>
-          <Header />
-          <Route exact path='/' component={Landing} />
-          <Route exact path='/dashboard' component={Dashboard} />
-          <Route path='/surveys/new' component={SurveyNew} />
-        </Fragment>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Fragment>
+        <Header />
+        <Alert />
+        <Route exact path='/' component={Landing} />
+        <Route exact path='/dashboard' component={Dashboard} />
+        <Route path='/surveys/new' component={SurveyNew} />
+      </Fragment>
+    </BrowserRouter>
   );
 };
 
-export default connect(null, actions)(App);
+export default App;
