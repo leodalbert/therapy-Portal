@@ -18,6 +18,9 @@ const app = express();
 // Connect Database
 connectDB();
 
+// Init Middleware (body-parser)
+app.use(express.json());
+
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -29,6 +32,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/api/auth')(app);
+require('./routes/api/clients')(app);
+require('./routes/api/appts')(app);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

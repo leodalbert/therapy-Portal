@@ -11,11 +11,7 @@ const PrivateRoute = ({
   <Route
     {...rest}
     render={(props) =>
-      user === '' && !loading ? (
-        <Redirect to='/landing' />
-      ) : (
-        <Component {...props} />
-      )
+      !user && !loading ? <Redirect to='/landing' /> : <Component {...props} />
     }
   />
 );

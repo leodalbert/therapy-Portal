@@ -37,11 +37,11 @@ const Landing = ({ auth: { user, loading } }) =>
                 Continue with Google
               </a>
               <a
-                class='waves-effect waves-light btn z-depth-5 blue darken-2 social facebook'
+                className='waves-effect waves-light btn z-depth-5 blue darken-2 social facebook'
                 style={{ margin: '15px', textTransform: 'none' }}
                 href='/auth/facebook'
               >
-                <i class='fa fa-facebook'></i> Continue with Facebook
+                <i className='fa fa-facebook'></i> Continue with Facebook
               </a>
             </div>
           </div>

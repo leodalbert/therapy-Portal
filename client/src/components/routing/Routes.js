@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import Alert from '../layout/Alert';
 
-import PrivateRoute from './PrivateRoute';
+import PrivateRoute from '../routing/PrivateRoute';
 import Header from '../layout/Header';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -17,7 +17,7 @@ const Routes = () => {
       <section className='container'>
         <Switch>
           <Route exact path='/register' component={Register} />
-          <PrivateRoute exact path='/' component={Dashboard} />
+          <PrivateRoute exact path='/dashboard' component={Dashboard} />
         </Switch>
       </section>
     </Fragment>

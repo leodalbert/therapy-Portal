@@ -11,6 +11,7 @@ const clientSchema = new Schema({
   },
   highRisk: {
     type: Boolean,
+    default: false,
   },
   address: {
     type: String,
@@ -28,8 +29,15 @@ const clientSchema = new Schema({
     type: Date,
     default: new Date(),
   },
+  nextAppt: {
+    type: Date,
+  },
   nextApptReminders: {
     type: [String],
+  },
+  archived: {
+    type: Boolean,
+    default: true,
   },
   _user: {
     type: Schema.Types.ObjectId,

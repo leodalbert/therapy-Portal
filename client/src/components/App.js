@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { fetchUser } from '../actions/user';
+import { fetchUser } from '../actions/auth';
 import store from '../store';
 
 import 'materialize-css/dist/css/materialize.min.css';

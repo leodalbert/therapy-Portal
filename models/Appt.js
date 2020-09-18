@@ -14,6 +14,9 @@ const apptsSchema = new Schema({
   note: {
     type: String,
   },
+  status: {
+    type: String,
+  },
   _user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
