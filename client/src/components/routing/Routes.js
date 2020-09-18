@@ -6,6 +6,8 @@ import Alert from '../layout/Alert';
 import PrivateRoute from '../routing/PrivateRoute';
 import Header from '../layout/Header';
 import Dashboard from '../dashboard/Dashboard';
+import BigCalendar from '../calendar/BigCalendar';
+import ClientsPage from '../clients/ClientsPage';
 
 const Register = () => <div>Register</div>;
 
@@ -14,10 +16,12 @@ const Routes = () => {
     <Fragment>
       <Header />
       <Alert />
-      <section className='container'>
+      <section>
         <Switch>
           <Route exact path='/register' component={Register} />
           <PrivateRoute exact path='/dashboard' component={Dashboard} />
+          <PrivateRoute exact path='/clients' component={ClientsPage} />
+          <PrivateRoute exact path='/calendar' component={BigCalendar} />
         </Switch>
       </section>
     </Fragment>

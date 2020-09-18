@@ -18,6 +18,11 @@ const Header = ({ auth: { user, loading } }) => {
           </Link>
           <ul id='nav-mobile' className='right hide-on-med-and-down'>
             <li>
+              <Link to='/clients'>
+                <i className='fas fa-users left'></i>Clients
+              </Link>
+            </li>
+            <li>
               <Link to='/calendar'>
                 <i className='far fa-calendar-alt left'></i>Calendar
               </Link>
@@ -39,7 +44,7 @@ const Header = ({ auth: { user, loading } }) => {
           <Link to='/clients'>Clients</Link>
         </li>
         <li>
-          <Link to='/logout'>Logout</Link>
+          <Link to='/api/logout'>Logout</Link>
         </li>
       </ul>
     </Fragment>

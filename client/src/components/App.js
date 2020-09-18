@@ -24,7 +24,7 @@ const App = () => {
     <Router>
       <Fragment>
         <Switch>
-          <Route exact path='/landing' component={Landing} />
+          <Route exact path='/' component={Landing} />
           <Route component={Routes} />
         </Switch>
       </Fragment>
