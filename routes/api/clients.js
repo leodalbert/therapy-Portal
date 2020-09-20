@@ -19,6 +19,8 @@ module.exports = (app) => {
         _id: true,
         nextAppt: true,
         nextApptReminders: true,
+        phone: true,
+        email: true,
       });
       res.json(clients);
     } catch (err) {
@@ -27,7 +29,7 @@ module.exports = (app) => {
     }
   });
 
-  // @route   GET /api/clients
+  // @route   GET /api/clients/archived
   // @desc    get all Archived clients belonging to User (only name, id, phone, email)
   // @access  Private
   app.get('/api/clients/archived', requireLogin, async (req, res) => {
@@ -185,7 +187,7 @@ module.exports = (app) => {
     }
   });
 
-  // @route   Post /api/clients/:id/archive
+  // @route   Post /api/clients/archive/:id
   // @desc    Archive Client by id
   // @access  Private
 
@@ -203,8 +205,26 @@ module.exports = (app) => {
     }
   });
 
+  // @route   Post /api/unarchive/clients/:id
+  // @desc    Unarchive Client by id
+  // @access  Private
+
+  app.post('/api/clients/unarchive/:id', requireLogin, async (req, res) => {
+    const client = await Client.updateOne(
+      {
+        _id: req.params.id,
+      },
+      {
+        $set: { archived: false },
+      }
+    );
+    if (!client) {
+      return res.status(404).json({ msg: 'Client not found' });
+    }
+  });
+
   // @route   POST /api/clients/:id/note
-  // @desc    create or edit note for appt
+  // @desc    create or edit note for client
   // @access  Private
   app.post('/api/clients/:id/note', requireLogin, async (req, res) => {
     try {
@@ -216,7 +236,6 @@ module.exports = (app) => {
         return res.status(404).json({ msg: 'Client not found' });
       }
       let note = await ClientNote.findById(req.body._id);
-      console.log(req.body._id);
 
       if (note) {
         //  Update

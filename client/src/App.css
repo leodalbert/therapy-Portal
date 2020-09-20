@@ -39,3 +39,38 @@
   justify-content: center;
   text-align: center;
 }
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  margin-left: 30%;
+}
+
+input#search-input {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 700px;
+  height: 30px;
+}
+
+.spinner {
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input#search-input::placeholder {
+  color: white;
+}

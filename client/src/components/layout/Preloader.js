@@ -1,12 +1,7 @@
-import React, { Fragment } from 'react';
-import spinner from './spinner.gif';
+import React from 'react';
 
 export default () => (
-  <Fragment>
-    <img
-      src={spinner}
-      style={{ width: '200px', margin: 'auto', display: 'block' }}
-      alt='loding...'
-    />
-  </Fragment>
+  <div className='spinner'>
+    <i className='fa fa-spinner fa-spin fa-3x'></i>
+  </div>
 );
