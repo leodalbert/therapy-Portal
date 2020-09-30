@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
+
 import ClientItem from './ClientItem';
 import Preloader from '../layout/Preloader';
+import AddClientBtn from './AddClientBtn';
 import {
   getAllClients,
   getClient,
@@ -19,14 +21,12 @@ const ClientPage = ({
   useEffect(() => {
     // on Mount
     showSearchbar();
+    getAllClients();
     //  on Unmount
     return () => {
       hideSearchbar();
     };
-  }, [showSearchbar, hideSearchbar]);
-  useEffect(() => {
-    getAllClients();
-  }, [getAllClients]);
+  }, [showSearchbar, hideSearchbar, getAllClients]);
 
   const visClients = clients.filter((client) =>
     client.name.toLowerCase().includes(filterText.toLowerCase())
@@ -34,11 +34,14 @@ const ClientPage = ({
   return loading ? (
     <Preloader />
   ) : (
-    <div className='container'>
-      {visClients.map((client) => (
-        <ClientItem key={client._id} client={client} />
-      ))}
-    </div>
+    <Fragment>
+      <div className='container'>
+        {visClients.map((client) => (
+          <ClientItem key={client._id} client={client} />
+        ))}
+      </div>
+      <AddClientBtn />
+    </Fragment>
   );
 };
 

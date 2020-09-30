@@ -47,7 +47,7 @@ nav {
   width: 100%;
 }
 
-.input-field {
+.input-searchbar {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,4 +73,20 @@ input#search-input {
 
 input#search-input::placeholder {
   color: white;
+}
+
+.select-wrapper.select-month {
+  width: 100px;
+}
+.datepicker-controls .select-month input {
+  width: 100px;
+}
+
+#edit-client-modal {
+  width: 75%;
+  max-height: 80%;
+}
+
+input.MuiInputBase-input.MuiInput-input {
+  margin: 0px 0px 8px 45px;
 }

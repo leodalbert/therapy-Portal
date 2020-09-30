@@ -14,14 +14,16 @@ module.exports = (app) => {
       const clients = await Client.find({
         _user: req.user.id,
         archived: { $ne: true },
-      }).select({
-        name: true,
-        _id: true,
-        nextAppt: true,
-        nextApptReminders: true,
-        phone: true,
-        email: true,
-      });
+      })
+        .sort({ name: 'asc' })
+        .select({
+          name: true,
+          _id: true,
+          nextAppt: true,
+          nextApptReminders: true,
+          phone: true,
+          email: true,
+        });
       res.json(clients);
     } catch (err) {
       console.error(err.message);
@@ -64,8 +66,13 @@ module.exports = (app) => {
       address,
       phone,
       email,
+      clientSince,
       alias,
       nextAppt,
+      medication,
+      doctor,
+      doctorContact,
+      diagnoses,
     } = req.body;
 
     // Build Client Object
@@ -79,6 +86,10 @@ module.exports = (app) => {
     if (email) clientFields.email = email;
     if (alias) clientFields.alias = alias;
     if (nextAppt) clientFields.nextAppt = nextAppt;
+    if (medication) clientFields.medication = medication;
+    if (doctor) clientFields.doctor = doctor;
+    if (doctorContact) clientFields.doctorContact = doctorContact;
+    if (diagnoses) clientFields.diagnoses = diagnoses;
 
     try {
       const newClient = new Client(clientFields);
@@ -105,7 +116,13 @@ module.exports = (app) => {
       phone,
       email,
       alias,
+      clientSince,
       nextAppt,
+      nextApptReminders,
+      medication,
+      doctor,
+      doctorContact,
+      diagnoses,
       archived,
     } = req.body;
 
@@ -113,14 +130,38 @@ module.exports = (app) => {
     const clientFields = {};
     clientFields._user = req.user.id;
     clientFields.name = name;
-    if (birthday) clientFields.birthday = birthday;
-    if (highRisk) clientFields.highRisk = highRisk;
-    if (address) clientFields.address = address;
-    if (phone) clientFields.phone = phone;
-    if (email) clientFields.email = email;
-    if (alias) clientFields.alias = alias;
-    if (nextAppt) clientFields.nextAppt = nextAppt;
-    if (archived) clientFields.archived = archived;
+    birthday
+      ? (clientFields.birthday = birthday)
+      : (clientFields.birthday = null);
+    highRisk
+      ? (clientFields.highRisk = highRisk)
+      : (clientFields.highRisk = false);
+    address ? (clientFields.address = address) : (clientFields.address = '');
+    phone ? (clientFields.phone = phone) : (clientFields.phone = '');
+    email ? (clientFields.email = email) : (clientFields.email = '');
+    alias ? (clientFields.alias = alias) : (clientFields.alias = '');
+    nextAppt
+      ? (clientFields.nextAppt = nextAppt)
+      : (clientFields.nextAppt = null);
+    archived
+      ? (clientFields.archived = archived)
+      : (clientFields.archived = false);
+    medication
+      ? (clientFields.medication = medication)
+      : (clientFields.medication = null);
+    doctor ? (clientFields.doctor = doctor) : (clientFields.doctor = '');
+    doctorContact
+      ? (clientFields.doctorContact = doctorContact)
+      : (clientFields.doctorContact = '');
+    diagnoses
+      ? (clientFields.diagnoses = diagnoses)
+      : (clientFields.diagnoses = '');
+    clientSince
+      ? (clientFields.clientSince = clientSince)
+      : (clientFields.clientSince = null);
+    nextApptReminders
+      ? (clientFields.nextApptReminders = nextApptReminders)
+      : (clientFields.nextApptReminders = null);
 
     try {
       const client = await Client.findById(req.params.id);
@@ -145,7 +186,7 @@ module.exports = (app) => {
   // @access  Private
   app.get('/api/clients/:id', requireLogin, async (req, res) => {
     try {
-      const client = await Client.find({
+      const client = await Client.findOne({
         _id: req.params.id,
         _user: req.user.id,
       });
@@ -288,7 +329,7 @@ module.exports = (app) => {
       const notes = await ClientNote.find({
         _user: req.user.id,
         _client: req.params.id,
-      });
+      }).sort({ dateCreated: 'asc' });
       if (!notes) {
         return res.json({ msg: 'No notes to display' });
       }

@@ -11,7 +11,11 @@ import {
   SHOW_SEARCHBAR,
   HIDE_SEARCHBAR,
   SET_TEXT_FILTER,
+  CLEAR_CLIENT,
+  GET_CLIENT_NOTES,
+  EDIT_CLIENT,
 } from './types';
+import { destroy } from 'redux-form';
 import { setAlert } from './alert';
 import axios from 'axios';
 
@@ -24,7 +28,7 @@ export const getAllClients = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: err.response, status: err.response.status },
     });
   }
 };
@@ -58,12 +62,16 @@ export const getArchivedClients = () => async (dispatch) => {
 };
 
 // Update client
-export const updateClient = (clientId, formData) => async (dispatch) => {
+export const updateClient = (values, history) => async (dispatch) => {
   try {
-    const res = await axios.post(`/api/clients/${clientId}`, formData);
-
+    const res = await axios.post(`/api/clients/${values._id}`, values);
+    history.push('/clients');
     dispatch({ type: UPDATE_CLIENT, payload: res.data });
-    dispatch(setAlert('Client Updated', 'alert-success'));
+    dispatch({ type: ADD_CLIENT, payload: res.data });
+    dispatch(destroy('editClient'));
+    dispatch(
+      setAlert(`${values.name}'s profile has been updated`, 'alert-success')
+    );
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,
@@ -145,4 +153,29 @@ export const hideSearchbar = () => (dispatch) => {
 // Set Text Filter
 export const setTextFilter = (text) => (dispatch) => {
   dispatch({ type: SET_TEXT_FILTER, payload: text });
+};
+
+// Clear CLient
+export const clearClient = () => (dispatch) => {
+  dispatch({ type: CLEAR_CLIENT });
+  dispatch(destroy('editClientForm'));
+};
+
+// Edit CLient
+export const editClient = () => (dispatch) => {
+  dispatch({ type: EDIT_CLIENT });
+};
+
+// Get Client Notes
+export const getClientNotes = (clientId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/clientnotes/client/${clientId}`);
+
+    dispatch({ type: GET_CLIENT_NOTES, payload: res.data });
+  } catch (err) {
+    dispatch({
+      type: CLIENT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
 };

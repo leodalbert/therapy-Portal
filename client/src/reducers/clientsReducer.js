@@ -11,6 +11,9 @@ import {
   SHOW_SEARCHBAR,
   HIDE_SEARCHBAR,
   SET_TEXT_FILTER,
+  CLEAR_CLIENT,
+  GET_CLIENT_NOTES,
+  EDIT_CLIENT,
 } from '../actions/types';
 
 const initialState = {
@@ -20,6 +23,8 @@ const initialState = {
   error: {},
   showSearchbar: false,
   filterText: '',
+  clientNotes: [],
+  edit: false,
 };
 
 export default function (state = initialState, action) {
@@ -31,12 +36,21 @@ export default function (state = initialState, action) {
         ...state,
         clients: payload,
         loading: false,
+        edit: false,
       };
     case GET_CLIENT:
       return {
         ...state,
         client: payload,
         loading: false,
+      };
+    case CLEAR_CLIENT:
+      return {
+        ...state,
+        client: null,
+        clientNotes: [],
+        loading: false,
+        edit: false,
       };
     case SET_TEXT_FILTER:
       return {
@@ -49,12 +63,26 @@ export default function (state = initialState, action) {
         clients: payload,
         loading: false,
       };
+    case EDIT_CLIENT:
+      return {
+        ...state,
+        edit: true,
+      };
     case ADD_CLIENT:
-    case UPDATE_CLIENT:
       return {
         ...state,
         clients: [payload, ...state.clients],
         loading: false,
+        edit: false,
+      };
+    case UPDATE_CLIENT:
+      return {
+        ...state,
+        clients: state.clients.filter((client) => client._id !== payload._id),
+        client: null,
+        clientNotes: [],
+        loading: false,
+        edit: false,
       };
     case REMOVE_CLIENT:
     case ARCHIVE_CLIENT:
@@ -79,6 +107,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         showSearchbar: false,
+      };
+    case GET_CLIENT_NOTES:
+      return {
+        ...state,
+        clientNotes: payload,
+        loading: false,
       };
     default:
       return state;

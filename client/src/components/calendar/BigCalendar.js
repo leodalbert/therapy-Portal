@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 //import { getAppts } from '../../actions/appts';
 import FullCalendar from '@fullcalendar/react';
@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import momentPlugin from '@fullcalendar/moment';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 const BigCalendar = () => {
   //   useEffect(() => {

@@ -25,6 +25,15 @@ const Header = ({
     </Fragment>
   ) : (
     <Fragment>
+      <ul id='dropdown1' className='dropdown-content'>
+        <li>
+          <a href='/clients'>Current</a>
+        </li>
+        <li>
+          <a href='/archive'>Archived</a>
+        </li>
+        <li className='divider'></li>
+      </ul>
       <div className='navbar-fixed'>
         <nav>
           <div className='nav-wrapper teal lighten-3'>
@@ -37,11 +46,21 @@ const Header = ({
             </Link>
 
             <ul id='nav-mobile' className='right hide-on-med-and-down'>
-              <li>
-                <Link to='/clients'>
-                  <i className='fas fa-users left'></i>Clients
-                </Link>
-              </li>
+              {showSearchbar ? (
+                <li>
+                  <div className='dropdown-trigger' data-target='dropdown1'>
+                    <i className='fas fa-users left'></i>
+                    Clients
+                    <i className='material-icons right'>arrow_drop_down</i>
+                  </div>
+                </li>
+              ) : (
+                <li>
+                  <Link to='/clients'>
+                    <i className='fas fa-users left'></i>Clients
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link to='/calendar'>
                   <i className='far fa-calendar-alt left'></i>Calendar
@@ -57,7 +76,7 @@ const Header = ({
         </nav>
         {showSearchbar && (
           <div className='container hide-on-med-and-down'>
-            <div className='input-field'>
+            <div className='input-field input-searchbar'>
               <i className='white-text material-icons'>search</i>
               <input
                 className='white-text'

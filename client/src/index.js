@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import store from './store';
-import App from './components/App';
-
 import axios from 'axios';
+
+import store from './store';
+import App from './App';
+
 window.axios = axios;
 
 ReactDOM.render(

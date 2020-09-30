@@ -37,7 +37,19 @@ const clientSchema = new Schema({
   },
   archived: {
     type: Boolean,
-    default: true,
+    default: false,
+  },
+  medication: {
+    type: [String],
+  },
+  doctor: {
+    type: String,
+  },
+  doctorContact: {
+    type: String,
+  },
+  diagnoses: {
+    type: [String],
   },
   _user: {
     type: Schema.Types.ObjectId,
