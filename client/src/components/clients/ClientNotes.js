@@ -1,23 +1,71 @@
-import React, { Fragment, useEffect } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { getClientNotes } from '../../actions/client';
+import {
+  getClientNotes,
+  editNewNote,
+  submitClientNote,
+} from '../../actions/client';
 import PropTypes from 'prop-types';
 
 import ClientNoteItem from './ClientNoteItem';
 
 const ClientNotes = ({
   edit,
-  clients: {
-    client: { _id },
-    clientNotes,
-  },
+  clientId,
+  clientNotes,
+  getClientNotes,
+  note,
+  editNewNote,
+  submitClientNote,
 }) => {
+  const latestNote = useRef('');
+  useEffect(() => {
+    latestNote.current = note;
+  });
+
+  useEffect(() => {
+    getClientNotes(clientId);
+    return () => {
+      if (latestNote.current.note) {
+        submitClientNote(latestNote.current, clientId);
+      }
+    };
+  }, [getClientNotes, clientId]);
+
+  const handleEditNewNote = (text) => {
+    editNewNote(text);
+  };
+
+  const handleSubmit = () => {
+    if (latestNote.current.note) {
+      submitClientNote(latestNote.current, clientId);
+    }
+  };
   return (
     <Fragment>
+      <div className='row'>
+        <div className='input-field col s11'>
+          <textarea
+            id='clientNote'
+            className='materialize-textarea'
+            value={note.note}
+            onChange={(e) => handleEditNewNote(e.target.value)}
+          />
+          <label htmlFor='clientNote'>New Note</label>
+        </div>
+        <div className='input-field col s12 m4 l1'>
+          <button
+            className='waves-effect waves-teal btn-flat teal-text'
+            type='submit'
+            onClick={handleSubmit}
+          >
+            <i className='fas fa-check'></i>
+          </button>
+        </div>
+      </div>
       <div>
         {clientNotes.map((note) => {
-          return <ClientNoteItem key={note.note} note={note} edit={edit} />;
+          return <ClientNoteItem key={note._id} note={note} edit={edit} />;
         })}
       </div>
     </Fragment>
@@ -26,11 +74,22 @@ const ClientNotes = ({
 
 ClientNotes.propTypes = {
   getClientNotes: PropTypes.func.isRequired,
-  clients: PropTypes.object.isRequired,
+  clientNotes: PropTypes.array.isRequired,
+  clientId: PropTypes.string.isRequired,
+  edit: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
-  clients: state.clients,
+  clientId: state.clients.client._id,
+  clientNotes: state.clients.clientNotes,
+  note: state.clients.newNote,
+  edit: state.clients.edit,
 });
 
-export default connect(mapStateToProps, { getClientNotes })(ClientNotes);
+const mapDispatchToProps = {
+  getClientNotes,
+  editNewNote,
+  submitClientNote,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientNotes);

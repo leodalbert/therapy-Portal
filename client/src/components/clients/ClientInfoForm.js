@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm, Form } from 'redux-form';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import MedChipGenerator from './MedChipGenerator';
-import DiagnosesChipGenerator from './DiagnosesChipGenerator';
-import DatePickerField from './DatePickerField';
+import MedChipGenerator from './utils/MedChipGenerator';
+import DiagnosesChipGenerator from './utils/DiagnosesChipGenerator';
+import DatePickerField from './utils/DatePickerField';
 import Reminders from './Reminders';
 
 const ClientInfoForm = ({ edit, initialValues, handleSubmit }) => {

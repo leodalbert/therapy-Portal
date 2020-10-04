@@ -14,6 +14,10 @@ import {
   CLEAR_CLIENT,
   GET_CLIENT_NOTES,
   EDIT_CLIENT,
+  EDIT_NEW_CLIENT_NOTE,
+  SUBMIT_CLIENT_NOTE,
+  CLEAR_CLIENT_NOTE_STATE,
+  DELETE_NOTE,
 } from './types';
 import { destroy } from 'redux-form';
 import { setAlert } from './alert';
@@ -162,8 +166,32 @@ export const clearClient = () => (dispatch) => {
 };
 
 // Edit CLient
-export const editClient = () => (dispatch) => {
-  dispatch({ type: EDIT_CLIENT });
+export const editClient = (value) => (dispatch) => {
+  dispatch({ type: EDIT_CLIENT, payload: value });
+};
+
+// New Note State
+export const editNewNote = (note) => (dispatch) => {
+  dispatch({ type: EDIT_NEW_CLIENT_NOTE, payload: note });
+};
+
+// Clear New Note State
+export const clearNewClientNote = () => (dispatch) => {
+  dispatch({ type: CLEAR_CLIENT_NOTE_STATE });
+};
+
+// Submit new or edited note
+export const submitClientNote = (note, clientId) => async (dispatch) => {
+  try {
+    let res = await axios.post(`/api/clients/${clientId}/note`, note);
+    dispatch({ type: SUBMIT_CLIENT_NOTE, payload: res.data });
+    dispatch({ type: CLEAR_CLIENT_NOTE_STATE });
+  } catch (err) {
+    dispatch({
+      type: CLIENT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
 };
 
 // Get Client Notes
@@ -172,6 +200,21 @@ export const getClientNotes = (clientId) => async (dispatch) => {
     const res = await axios.get(`/api/clientnotes/client/${clientId}`);
 
     dispatch({ type: GET_CLIENT_NOTES, payload: res.data });
+  } catch (err) {
+    dispatch({
+      type: CLIENT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Delete Note
+export const deleteNote = (noteId) => async (dispatch) => {
+  try {
+    await axios.delete(`/api/clientnote/${noteId}`);
+
+    dispatch({ type: DELETE_NOTE, payload: noteId });
+    dispatch(setAlert('Note Deleted', 'alert-success'));
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,

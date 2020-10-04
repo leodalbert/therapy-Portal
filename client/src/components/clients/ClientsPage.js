@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ClientItem from './ClientItem';
 import Preloader from '../layout/Preloader';
-import AddClientBtn from './AddClientBtn';
+import AddClientBtn from './utils/AddClientBtn';
 import {
   getAllClients,
   getClient,

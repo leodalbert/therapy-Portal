@@ -3,10 +3,18 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, DialogContent, Tabs, Tab, Box } from '@material-ui/core';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Tabs,
+  Tab,
+  Box,
+} from '@material-ui/core';
 
 import ClientInfoForm from './ClientInfoForm';
-import Buttton from './Button';
+import EditButton from './utils/EditButton';
+import ClientNotes from './ClientNotes';
 import { updateClient } from '../../actions/client';
 
 const ClientModal = ({
@@ -45,10 +53,11 @@ const ClientModal = ({
           fullWidth
           open={isOpen}
           onClose={handleClose}
+          scroll='paper'
           aria-labelledby='max-width-dialog-title'
           classes={{ paperFullWidth: classes.dialogCustomizedWidth }}
         >
-          <DialogContent style={{ padding: '0px 0px 0px 0px' }}>
+          <DialogTitle style={{ padding: '0px 0px 0px 0px' }}>
             <div>
               <h5
                 className='grey-text text-darken-1'
@@ -72,6 +81,8 @@ const ClientModal = ({
                 </Tabs>
               </div>
             </div>
+          </DialogTitle>
+          <DialogContent>
             <TabPanel value={value} index={0}>
               <ClientInfoForm
                 edit={edit}
@@ -81,22 +92,11 @@ const ClientModal = ({
             <TabPanel value={value} index={1}>
               <div className='row'>
                 <div className='col s8 offset-s2'>
-                  <form className='col s12'>
-                    <div className='row'>
-                      <div className='input-field col s12'>
-                        <i className='material-icons prefix'>mode_edit</i>
-                        <textarea
-                          id='icon_prefix2'
-                          className='materialize-textarea'
-                          placeholder='New Note...'
-                        ></textarea>
-                      </div>
-                    </div>
-                  </form>
+                  <ClientNotes />
                 </div>
               </div>
             </TabPanel>
-            <Buttton />
+            <EditButton />
           </DialogContent>
         </Dialog>
       </Fragment>

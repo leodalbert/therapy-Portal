@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { submit } from 'redux-form';
 import { makeStyles } from '@material-ui/core/styles';
 import { Fab } from '@material-ui/core';
-import { editClient } from '../../actions/client';
+import { editClient } from '../../../actions/client';
 
-const Button = ({ dispatch, edit }) => {
+const EditButton = ({ dispatch, edit }) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       position: 'absolute',
@@ -17,9 +17,10 @@ const Button = ({ dispatch, edit }) => {
 
   const handleClick = () => {
     if (!edit) {
-      dispatch(editClient());
+      dispatch(editClient(true));
     } else {
       dispatch(submit('editClientForm'));
+      dispatch(editClient(false));
     }
   };
 
@@ -39,4 +40,4 @@ const Button = ({ dispatch, edit }) => {
 const mapStateToProps = (state) => ({
   edit: state.clients.edit,
 });
-export default connect(mapStateToProps)(Button);
+export default connect(mapStateToProps)(EditButton);

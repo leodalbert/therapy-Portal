@@ -329,7 +329,7 @@ module.exports = (app) => {
       const notes = await ClientNote.find({
         _user: req.user.id,
         _client: req.params.id,
-      }).sort({ dateCreated: 'asc' });
+      }).sort({ dateCreated: 'desc' });
       if (!notes) {
         return res.json({ msg: 'No notes to display' });
       }

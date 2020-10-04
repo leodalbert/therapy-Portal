@@ -14,6 +14,10 @@ import {
   CLEAR_CLIENT,
   GET_CLIENT_NOTES,
   EDIT_CLIENT,
+  EDIT_NEW_CLIENT_NOTE,
+  SUBMIT_CLIENT_NOTE,
+  CLEAR_CLIENT_NOTE_STATE,
+  DELETE_NOTE,
 } from '../actions/types';
 
 const initialState = {
@@ -24,6 +28,10 @@ const initialState = {
   showSearchbar: false,
   filterText: '',
   clientNotes: [],
+  newNote: {
+    note: '',
+    _id: null,
+  },
   edit: false,
 };
 
@@ -52,6 +60,14 @@ export default function (state = initialState, action) {
         loading: false,
         edit: false,
       };
+    case CLEAR_CLIENT_NOTE_STATE:
+      return {
+        ...state,
+        newNote: {
+          note: '',
+          _id: null,
+        },
+      };
     case SET_TEXT_FILTER:
       return {
         ...state,
@@ -66,7 +82,33 @@ export default function (state = initialState, action) {
     case EDIT_CLIENT:
       return {
         ...state,
-        edit: true,
+        edit: payload,
+      };
+    case EDIT_NEW_CLIENT_NOTE:
+      return {
+        ...state,
+        newNote: !!payload._id
+          ? payload
+          : {
+              _id: state.newNote._id,
+              note: payload,
+            },
+      };
+    case SUBMIT_CLIENT_NOTE:
+      return {
+        ...state,
+        clientNotes: state.clientNotes.find((note) => note._id === payload._id)
+          ? state.clientNotes.map((noteItem) =>
+              noteItem._id === payload._id
+                ? { ...noteItem, note: payload.note }
+                : noteItem
+            )
+          : [payload, ...state.clientNotes],
+      };
+    case DELETE_NOTE:
+      return {
+        ...state,
+        clientNotes: state.clientNotes.filter((note) => note._id !== payload),
       };
     case ADD_CLIENT:
       return {
