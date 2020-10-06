@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   getClientNotes,
@@ -30,7 +30,7 @@ const ClientNotes = ({
         submitClientNote(latestNote.current, clientId);
       }
     };
-  }, [getClientNotes, clientId]);
+  }, [getClientNotes, clientId, submitClientNote]);
 
   const handleEditNewNote = (text) => {
     editNewNote(text);

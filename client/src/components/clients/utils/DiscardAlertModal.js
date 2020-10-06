@@ -1,7 +1,14 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
 
-const DiscardAlertModal = ({ openAlert, setOpenAlert, handleDiscard }) => {
+const DiscardAlertModal = ({
+  openAlert,
+  setOpenAlert,
+  handleDiscard,
+  text,
+  confirmBtn,
+  cancleBtn,
+}) => {
   return (
     <Fragment>
       <Dialog
@@ -9,13 +16,13 @@ const DiscardAlertModal = ({ openAlert, setOpenAlert, handleDiscard }) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id='alert-dialog-title'>Discard Changes?</DialogTitle>
+        <DialogTitle id='alert-dialog-title'>{text}</DialogTitle>
         <DialogActions>
           <Button onClick={() => handleDiscard()} color='primary'>
-            Discard
+            {confirmBtn}
           </Button>
           <Button onClick={() => setOpenAlert(false)} color='primary' autoFocus>
-            Cancel
+            {cancleBtn}
           </Button>
         </DialogActions>
       </Dialog>

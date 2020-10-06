@@ -18,6 +18,7 @@ import {
   SUBMIT_CLIENT_NOTE,
   CLEAR_CLIENT_NOTE_STATE,
   DELETE_NOTE,
+  SET_SHOW_ARCHIVED,
 } from '../actions/types';
 
 const initialState = {
@@ -33,6 +34,7 @@ const initialState = {
     _id: null,
   },
   edit: false,
+  showArchived: false,
 };
 
 export default function (state = initialState, action) {
@@ -72,6 +74,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         filterText: payload,
+      };
+    case SET_SHOW_ARCHIVED:
+      return {
+        ...state,
+        showArchived: payload,
       };
     case GET_ARCHIVED_CLIENTS:
       return {
@@ -127,12 +134,21 @@ export default function (state = initialState, action) {
         edit: false,
       };
     case REMOVE_CLIENT:
+      return {
+        ...state,
+        clients: state.clients.filter((client) => client._id !== payload),
+      };
     case ARCHIVE_CLIENT:
     case UNARCHIVE_CLIENT:
       return {
         ...state,
-        clients: state.clients.filter((client) => client._id !== payload),
+        clients: state.clients.map((client) =>
+          client._id === payload.id
+            ? { ...client, archived: payload.value }
+            : client
+        ),
         loading: false,
+        client: null,
       };
     case CLIENT_ERROR:
       return {

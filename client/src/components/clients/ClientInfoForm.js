@@ -92,6 +92,8 @@ const ClientInfoForm = ({ edit, initialValues, handleSubmit }) => {
                   name='birthday'
                   component={DatePickerField}
                   edit={edit}
+                  openTo='year'
+                  views={['year', 'date']}
                 />
               </div>
             )}
@@ -140,6 +142,7 @@ const ClientInfoForm = ({ edit, initialValues, handleSubmit }) => {
                   name='clientSince'
                   component={DatePickerField}
                   edit={edit}
+                  defaultDate={new Date()}
                 />
               </div>
             )}

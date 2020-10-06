@@ -1,6 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import ClientInfoForm from './ClientInfoForm';
+import EditButton from './utils/EditButton';
+import ClientNotes from './ClientNotes';
+import {
+  updateClient,
+  archiveClient,
+  unarchiveClient,
+  removeClient,
+} from '../../actions/client';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -12,11 +21,6 @@ import {
   Box,
 } from '@material-ui/core';
 
-import ClientInfoForm from './ClientInfoForm';
-import EditButton from './utils/EditButton';
-import ClientNotes from './ClientNotes';
-import { updateClient } from '../../actions/client';
-
 const ClientModal = ({
   client,
   isOpen,
@@ -24,12 +28,29 @@ const ClientModal = ({
   updateClient,
   history,
   edit,
+  archiveClient,
+  unarchiveClient,
+  removeClient,
 }) => {
   // Tab page
   const [value, setValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  // handle Archive
+  const handleArchive = () => {
+    if (!client.archived) {
+      archiveClient(client._id);
+    } else {
+      unarchiveClient(client._id);
+    }
+  };
+
+  // Handle Delete Client
+  const handleDelete = () => {
+    removeClient(client._id);
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -96,7 +117,10 @@ const ClientModal = ({
                 </div>
               </div>
             </TabPanel>
-            <EditButton />
+            <EditButton
+              handleArchive={handleArchive}
+              handleDelete={handleDelete}
+            />
           </DialogContent>
         </Dialog>
       </Fragment>
@@ -110,6 +134,9 @@ const mapStateToProps = (state) => ({
   edit: state.clients.edit,
 });
 
-export default connect(mapStateToProps, { updateClient })(
-  withRouter(ClientModal)
-);
+export default connect(mapStateToProps, {
+  updateClient,
+  archiveClient,
+  unarchiveClient,
+  removeClient,
+})(withRouter(ClientModal));

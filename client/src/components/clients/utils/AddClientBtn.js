@@ -1,14 +1,28 @@
 import React from 'react';
+import { Fab } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
 
-const AddClientBtn = () => {
+const AddClientBtn = ({ setOpenModal }) => {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      color: blue,
+      position: 'fixed',
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
+    },
+  }));
+  const classes = useStyles();
+
   return (
-    <div className='fixed-action-btn'>
-      <a
-        className='btn-floating btn-large blue modal-trigger'
-        href='#add-client-modal'
+    <div className={classes.root}>
+      <Fab
+        className='blue'
+        aria-label='addClient'
+        onClick={() => setOpenModal(true)}
       >
-        <i className='large material-icons'>person_add</i>
-      </a>
+        <i className='material-icons white-text'>person_add</i>
+      </Fab>
     </div>
   );
 };

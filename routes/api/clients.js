@@ -13,7 +13,6 @@ module.exports = (app) => {
     try {
       const clients = await Client.find({
         _user: req.user.id,
-        archived: { $ne: true },
       })
         .sort({ name: 'asc' })
         .select({
@@ -23,6 +22,7 @@ module.exports = (app) => {
           nextApptReminders: true,
           phone: true,
           email: true,
+          archived: true,
         });
       res.json(clients);
     } catch (err) {
@@ -84,6 +84,7 @@ module.exports = (app) => {
     if (address) clientFields.address = address;
     if (phone) clientFields.phone = phone;
     if (email) clientFields.email = email;
+    if (clientSince) clientFields.clientSince = clientSince;
     if (alias) clientFields.alias = alias;
     if (nextAppt) clientFields.nextAppt = nextAppt;
     if (medication) clientFields.medication = medication;
@@ -233,16 +234,25 @@ module.exports = (app) => {
   // @access  Private
 
   app.post('/api/clients/archive/:id', requireLogin, async (req, res) => {
-    const client = await Client.updateOne(
-      {
-        _id: req.params.id,
-      },
-      {
-        $set: { archived: true },
+    try {
+      const client = await Client.updateOne(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: { archived: true },
+        }
+      );
+      if (!client) {
+        return res.status(404).json({ msg: 'Client not found' });
       }
-    );
-    if (!client) {
-      return res.status(404).json({ msg: 'Client not found' });
+      res.json({ msg: 'Client Archived' });
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Client not found' });
+      }
+      res.status(500).send('Server Error');
     }
   });
 
@@ -251,16 +261,25 @@ module.exports = (app) => {
   // @access  Private
 
   app.post('/api/clients/unarchive/:id', requireLogin, async (req, res) => {
-    const client = await Client.updateOne(
-      {
-        _id: req.params.id,
-      },
-      {
-        $set: { archived: false },
+    try {
+      const client = await Client.updateOne(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: { archived: false },
+        }
+      );
+      if (!client) {
+        return res.status(404).json({ msg: 'Client not found' });
       }
-    );
-    if (!client) {
-      return res.status(404).json({ msg: 'Client not found' });
+      res.json({ msg: 'Client Unarchived' });
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Client not found' });
+      }
+      res.status(500).send('Server Error');
     }
   });
 

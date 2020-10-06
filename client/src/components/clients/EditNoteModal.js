@@ -152,6 +152,9 @@ const EditNoteModal = ({
           openAlert={openAlert}
           setOpenAlert={setOpenAlert}
           handleDiscard={handleDiscard}
+          text={'Discard Changes?'}
+          confirmBtn='Discard'
+          cancleBtn='Cancel'
         />
       </Dialog>
     </div>

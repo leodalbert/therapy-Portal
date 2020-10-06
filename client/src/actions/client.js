@@ -18,6 +18,7 @@ import {
   SUBMIT_CLIENT_NOTE,
   CLEAR_CLIENT_NOTE_STATE,
   DELETE_NOTE,
+  SET_SHOW_ARCHIVED,
 } from './types';
 import { destroy } from 'redux-form';
 import { setAlert } from './alert';
@@ -85,12 +86,12 @@ export const updateClient = (values, history) => async (dispatch) => {
 };
 
 // add client
-export const addClient = (formData) => async (dispatch) => {
+export const addClient = (values) => async (dispatch) => {
   try {
-    const res = await axios.post(`/api/clients`, formData);
+    const res = await axios.post(`/api/clients`, values);
 
     dispatch({ type: ADD_CLIENT, payload: res.data });
-    dispatch(setAlert('Client Added', 'alert-success'));
+    dispatch(setAlert(`${values.name} added as a client`, 'alert-success'));
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,
@@ -103,9 +104,10 @@ export const addClient = (formData) => async (dispatch) => {
 export const removeClient = (clientId) => async (dispatch) => {
   try {
     await axios.delete(`/api/clients/${clientId}`);
-
     dispatch({ type: REMOVE_CLIENT, payload: clientId });
-    dispatch(setAlert('Client Removed', 'alert-success'));
+    dispatch(destroy('editClient'));
+    dispatch({ type: EDIT_CLIENT, payload: false });
+    dispatch(setAlert('Client Deleted', 'alert-success'));
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,
@@ -118,8 +120,9 @@ export const removeClient = (clientId) => async (dispatch) => {
 export const archiveClient = (clientId) => async (dispatch) => {
   try {
     await axios.post(`/api/clients/archive/${clientId}`);
-
-    dispatch({ type: ARCHIVE_CLIENT, payload: clientId });
+    dispatch({ type: ARCHIVE_CLIENT, payload: { id: clientId, value: true } });
+    dispatch(destroy('editClient'));
+    dispatch({ type: EDIT_CLIENT, payload: false });
     dispatch(setAlert('Client Archived', 'alert-success'));
   } catch (err) {
     dispatch({
@@ -134,8 +137,13 @@ export const unarchiveClient = (clientId) => async (dispatch) => {
   try {
     await axios.post(`/api/clients/unarchive/${clientId}`);
 
-    dispatch({ type: UNARCHIVE_CLIENT, payload: clientId });
-    dispatch(setAlert('Client re-activated', 'alert-success'));
+    dispatch({
+      type: UNARCHIVE_CLIENT,
+      payload: { id: clientId, value: false },
+    });
+    dispatch(destroy('editClient'));
+    dispatch({ type: EDIT_CLIENT, payload: false });
+    dispatch(setAlert('Client un-archived', 'alert-success'));
   } catch (err) {
     dispatch({
       type: CLIENT_ERROR,
@@ -178,6 +186,11 @@ export const editNewNote = (note) => (dispatch) => {
 // Clear New Note State
 export const clearNewClientNote = () => (dispatch) => {
   dispatch({ type: CLEAR_CLIENT_NOTE_STATE });
+};
+
+// Sets Show Archived Clients
+export const setShowArchived = (value) => (dispatch) => {
+  dispatch({ type: SET_SHOW_ARCHIVED, payload: value });
 };
 
 // Submit new or edited note

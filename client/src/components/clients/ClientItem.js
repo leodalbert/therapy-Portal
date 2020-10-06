@@ -28,6 +28,7 @@ const ClientItem = ({
         <div className='card-content'>
           <ClientModal
             isOpen={isOpen}
+            setIsOpen={setIsOpen}
             handleClose={handleModalClose}
             clientId={_id}
           />
@@ -47,10 +48,13 @@ const ClientItem = ({
                   <p>
                     <strong> Reminders for next session: </strong>
                   </p>
-
-                  {nextApptReminders.map((reminder) => {
-                    return <li key={reminder}>{reminder}</li>;
-                  })}
+                  {nextApptReminders.length > 0 ? (
+                    nextApptReminders.map((reminder) => {
+                      return <li key={reminder}>{reminder}</li>;
+                    })
+                  ) : (
+                    <li> No reminders!</li>
+                  )}
                 </div>
               )}
             </div>

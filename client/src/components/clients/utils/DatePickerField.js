@@ -5,6 +5,7 @@ export default ({
   meta: { submitting, error, touched },
   input: { onBlur, value, ...inputProps },
   edit,
+  defaultDate,
   ...others
 }) => {
   const onChange = (date) => {

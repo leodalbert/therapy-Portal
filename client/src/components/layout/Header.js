@@ -1,13 +1,28 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setTextFilter } from '../../actions/client';
+import { setTextFilter, setShowArchived } from '../../actions/client';
+import M from 'materialize-css';
 
 const Header = ({
   setTextFilter,
+  setShowArchived,
   clients: { showSearchbar, filterText },
   auth: { user, loading },
 }) => {
+  useEffect(() => {
+    let dropdowns = document.querySelectorAll('.dropdown-trigger');
+    let options = {
+      inDuration: 300,
+      outDuration: 225,
+      hover: true,
+      belowOrigin: true,
+      coverTrigger: false,
+    };
+    M.Dropdown.init(dropdowns, options);
+    console.log(dropdowns);
+  });
+
   const onTextChange = (e) => {
     setTextFilter(e.target.value);
   };
@@ -27,17 +42,21 @@ const Header = ({
     <Fragment>
       <ul id='dropdown1' className='dropdown-content'>
         <li>
-          <a href='/clients'>Current</a>
+          <span onClick={() => setShowArchived(false)}>Current</span>
         </li>
         <li>
-          <a href='/archive'>Archived</a>
+          <span onClick={() => setShowArchived(true)}>Archived</span>
         </li>
         <li className='divider'></li>
       </ul>
       <div className='navbar-fixed'>
         <nav>
           <div className='nav-wrapper teal lighten-3'>
-            <Link to='/' className='brand-logo' style={{ marginLeft: '10px' }}>
+            <Link
+              to='/dashboard'
+              className='brand-logo'
+              style={{ marginLeft: '10px' }}
+            >
               {!loading && user.name}
             </Link>
 
@@ -82,14 +101,13 @@ const Header = ({
                 className='white-text'
                 type='text'
                 id='search-input'
-                placeholder='Search Clients..'
+                placeholder='Search Clients...'
                 value={filterText}
                 onChange={(e) => onTextChange(e)}
               />
             </div>
           </div>
         )}
-
         <ul className='sidenav' id='mobile-demo'>
           <li>
             <Link to='/calendar'>Calendar</Link>
@@ -111,4 +129,6 @@ const mapStateToProps = (state) => ({
   clients: state.clients,
 });
 
-export default connect(mapStateToProps, { setTextFilter })(Header);
+export default connect(mapStateToProps, { setTextFilter, setShowArchived })(
+  Header
+);

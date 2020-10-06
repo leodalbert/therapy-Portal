@@ -21,6 +21,10 @@
   margin-bottom: 30px;
 }
 
+.visibleOnEdit {
+  display: none;
+}
+
 /* Landing Page */
 .landing {
   position: relative;
@@ -48,16 +52,18 @@ nav {
 }
 
 .input-searchbar {
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  margin-left: 30%;
+  width: 20%;
+  margin-left: 22%;
 }
 
 input#search-input {
   display: block;
   margin: 0 auto;
+  margin-left: 10px;
   width: 90%;
   max-width: 700px;
   height: 30px;

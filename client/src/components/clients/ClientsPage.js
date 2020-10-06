@@ -1,9 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import ClientItem from './ClientItem';
 import Preloader from '../layout/Preloader';
 import AddClientBtn from './utils/AddClientBtn';
+import AddClientModal from './AddClientModal';
 import {
   getAllClients,
   getClient,
@@ -16,7 +17,7 @@ const ClientPage = ({
   getAllClients,
   showSearchbar,
   hideSearchbar,
-  clients: { clients, loading, filterText },
+  clients: { clients, loading, filterText, showArchived },
 }) => {
   useEffect(() => {
     // on Mount
@@ -28,19 +29,24 @@ const ClientPage = ({
     };
   }, [showSearchbar, hideSearchbar, getAllClients]);
 
-  const visClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(filterText.toLowerCase())
+  const [openModal, setOpenModal] = useState(false);
+
+  const visClients = clients.filter(
+    (client) =>
+      client.name.toLowerCase().includes(filterText.toLowerCase()) &&
+      client.archived === showArchived
   );
   return loading ? (
     <Preloader />
   ) : (
     <Fragment>
+      <AddClientModal isOpen={openModal} setOpenModal={setOpenModal} />
       <div className='container'>
         {visClients.map((client) => (
           <ClientItem key={client._id} client={client} />
         ))}
       </div>
-      <AddClientBtn />
+      <AddClientBtn setOpenModal={setOpenModal} />
     </Fragment>
   );
 };
