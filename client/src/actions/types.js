@@ -11,6 +11,7 @@ export const DELETE_APPT = 'DELETE_APPT';
 export const EDIT_APPT = 'EDIT_APPT';
 export const SET_LOADING = 'SET_LOADING';
 export const CLIENT_ERROR = 'CLIENT_ERROR';
+export const APPT_ERROR = 'APPT_ERROR';
 export const GET_CLIENT = 'GET_CLIENT';
 export const UPDATE_FORM_DATA = 'UPDATE_FORM_DATA';
 export const ADD_CLIENT = 'ADD_CLIENT';

@@ -93,6 +93,7 @@ input#search-input::placeholder {
   max-height: 80%;
 }
 
-input.MuiInputBase-input.MuiInput-input {
+.MuiInputBase-root.MuiInput-root.picker
+  input.MuiInputBase-input.MuiInput-input {
   margin: 0px 0px 8px 45px;
 }

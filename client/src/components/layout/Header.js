@@ -20,7 +20,6 @@ const Header = ({
       coverTrigger: false,
     };
     M.Dropdown.init(dropdowns, options);
-    console.log(dropdowns);
   });
 
   const onTextChange = (e) => {

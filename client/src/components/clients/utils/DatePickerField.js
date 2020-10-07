@@ -15,8 +15,10 @@ export default ({
   };
   return (
     <DatePicker
+      className='test'
       InputProps={{
         disableUnderline: true,
+        className: 'picker',
       }}
       {...inputProps}
       {...others}

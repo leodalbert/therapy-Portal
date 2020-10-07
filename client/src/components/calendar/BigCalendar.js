@@ -1,24 +1,32 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-//import { getAppts } from '../../actions/appts';
+import moment from 'moment';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import momentPlugin from '@fullcalendar/moment';
 
-// import PropTypes from 'prop-types';
+import { getAppts } from '../../actions/appts';
+import { getAllClients } from '../../actions/client';
+import AddApptModal from '../appointments/AddApptModal';
+import Preloader from '../layout/Preloader';
 
-const BigCalendar = () => {
-  //   useEffect(() => {
-  //     getAppts();
-  //   }, [getAppts]);
+import PropTypes from 'prop-types';
 
-  //   const { appts, current, error, loading } = apptReducer;
-  //   const { id, clientName, date, lenght, apptNote } = appts;
+const BigCalendar = ({
+  getAppts,
+  getAllClients,
+  appts: { appts, loading },
+}) => {
+  useEffect(() => {
+    getAppts();
+    getAllClients();
+  }, [getAppts, getAllClients]);
+  const [openAddApptModal, setOpenAddApptModal] = useState(false);
 
-  const events = {};
-
-  return (
+  return loading ? (
+    <Preloader />
+  ) : (
     <Fragment>
       <div className='container' style={{ marginTop: '10px' }}>
         <FullCalendar
@@ -31,28 +39,36 @@ const BigCalendar = () => {
           }}
           fixedWeekCount={false}
           navLinks={true}
-          events={events}
+          events={appts}
         />
       </div>
       <div className='fixed-action-btn'>
         <a
           className='btn-floating btn-large blue modal-trigger'
-          href='#add-appt-modal'
+          onClick={() => setOpenAddApptModal(!openAddApptModal)}
         >
           <i className='fas fa-plus'></i>
         </a>
       </div>
+      <AddApptModal
+        isOpen={openAddApptModal}
+        setOpenModal={setOpenAddApptModal}
+      />
     </Fragment>
   );
 };
 
-// BigCalendar.propTypes = {
-//   apptReducer: PropTypes.object.isRequired,
-//   getAppts: PropTypes.func.isRequired,
-// };
+BigCalendar.propTypes = {
+  appts: PropTypes.object.isRequired,
+  getAppts: PropTypes.func.isRequired,
+};
 
-// const mapStateToProps = (state) => ({
-//   apptReducer: state.appts,
-// });
+const mapStateToProps = (state) => ({
+  appts: state.appts,
+  clients: state.clients.clients,
+});
 
-export default connect()(BigCalendar);
+export default connect(mapStateToProps, { getAppts, getAllClients })(
+  BigCalendar
+);
+// {console.log(moment(appts[0].start).format('MMMM Do YYYY, h:mm:ss a'))}
