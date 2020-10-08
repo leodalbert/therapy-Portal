@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import M from 'materialize-css';
 import { DateTimePicker } from '@material-ui/pickers';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Button,
   Select,
   MenuItem,
   InputLabel,
   FormControl,
   TextField,
+  DialogActions,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
@@ -18,6 +19,7 @@ import PropTypes from 'prop-types';
 
 import { addAppt } from '../../actions/appts';
 import { setAlert } from '../../actions/alert';
+import DiscardAlertModal from '../clients/utils/DiscardAlertModal';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -27,8 +29,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
+const AddApptModal = ({
+  addAppt,
+  setAlert,
+  isOpen,
+  handleClose,
+  clients,
+  setOpenModal,
+}) => {
   const classes = useStyles();
+  // Discard changes alert modal state
+  const [openAlert, setOpenAlert] = useState(false);
   const [date, setDate] = useState(
     //   rounded to 15 minutes
     moment().add(15 - (moment().minute() % 30), 'minutes')
@@ -36,13 +47,27 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
   const [client, setClient] = useState('');
   const [length, setLength] = useState(45);
   const [note, setNote] = useState('');
-  console.log(client);
 
-  const onSubmit = () => {
+  //   Clear fields
+  const clearFields = () => {
+    setClient('');
+    setLength(45);
+    setNote('');
+    setDate(moment().add(15 - (moment().minute() % 30), 'minutes'));
+  };
+
+  // discard unsaved changes
+  const handleDiscard = () => {
+    setOpenAlert(false);
+    clearFields();
+    setOpenModal(false);
+  };
+
+  const handleSubmit = () => {
     const newAppt = {
       title: client,
-      start: date,
-      end: moment(date).add(length, 'm'),
+      start: date.toISOString(),
+      end: moment(date).add(length, 'm').toISOString(),
       note,
     };
 
@@ -55,11 +80,8 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
       'alert-success'
     );
 
-    //Clear fields
-    setClient('');
-    setLength(45);
-    setNote('');
-    setDate(moment().add(15 - (moment().minute() % 30), 'minutes'));
+    clearFields();
+    setOpenModal(false);
   };
   return (
     <Dialog
@@ -68,15 +90,17 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
       onClose={handleClose}
       scroll='paper'
       aria-labelledby='max-width-dialog-title'
+      onBackdropClick={() => setOpenAlert(true)}
+      disableEscapeKeyDown={true}
     >
       <DialogTitle>
         <div>
-          <h5 className='grey-text text-darken-1'>Add New Appointment</h5>
+          <h5 className='grey-text text-darken-1'>Schedule Appointment</h5>
         </div>
       </DialogTitle>
       <DialogContent>
         <div className='col s12'>
-          <div className='row'>
+          <div className='row' style={{ marginBottom: '0px' }}>
             <div className='col s5'>
               <FormControl className={classes.formControl}>
                 <InputLabel id='clientSelectorLabel'>Client</InputLabel>
@@ -88,7 +112,7 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
                   {clients
                     .filter((client) => !client.archived)
                     .map((client) => (
-                      <MenuItem key={client._id} value={client._id}>
+                      <MenuItem key={client._id} value={client.name}>
                         {client.name}
                       </MenuItem>
                     ))}
@@ -137,6 +161,24 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
           </div>
         </div>
       </DialogContent>
+      <DialogActions>
+        <Button
+          variant='contained'
+          color='primary'
+          disabled={!client}
+          onClick={() => handleSubmit()}
+        >
+          Schedule
+        </Button>
+      </DialogActions>
+      <DiscardAlertModal
+        openAlert={openAlert}
+        setOpenAlert={setOpenAlert}
+        handleDiscard={handleDiscard}
+        text={'Discard Appointment?'}
+        confirmBtn='Discard'
+        cancleBtn='Cancel'
+      />
     </Dialog>
   );
 };
@@ -144,79 +186,13 @@ const AddApptModal = ({ addAppt, setAlert, isOpen, handleClose, clients }) => {
 AddApptModal.prototypes = {
   addAppt: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  clients: PropTypes.array.isRequired,
+  setOpenModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   clients: state.clients.clients,
 });
 export default connect(mapStateToProps, { addAppt, setAlert })(AddApptModal);
-
-// <div className='row'>
-// <div className='col s6 '>
-//   <div className='input-field modal-margin'>
-//     <select
-//       name='Select Client'
-//       value={client}
-//       onChange={(e) => setClient(e.target.value)}
-//       className='browser-default'
-//     >
-//       <option value='' disabled={true}>
-//         Select Client
-//       </option>
-//       <ClientSelector />
-//     </select>
-//   </div>
-
-//   <div className='input-fields'>
-//     <select
-//       name='length'
-//       value={length}
-//       onChange={(e) => setLength(e.target.value)}
-//     >
-//       <option value='' disabled>
-//         Select length of session
-//       </option>
-//       <option value={30}>30 min</option>
-//       <option value={45}>45 min</option>
-//       <option value={60}>60 min</option>
-//     </select>
-//     <label>Length</label>
-//   </div>
-
-//   <div className='input-field'>
-//     <input
-//       type='text'
-//       name='note'
-//       value={note}
-//       onChange={(e) => setNote(e.target.value)}
-//     />
-//     <label htmlFor='note' className='active'>
-//       Note
-//     </label>
-//   </div>
-//   <div className='modal-footer'>
-//     <a
-//       disabled={!client}
-//       href='#!'
-//       onClick={onSubmit}
-//       className='modal-close waves-effect blue waves-light btn-large'
-//     >
-//       Create
-//     </a>
-//   </div>
-// </div>
-
-// <div className='myContainer col s6'>
-//   <DateTimePicker
-//     className='myDatePicker'
-//     variant='static'
-//     label='LightBlue DateTimePicker'
-//     value={date}
-//     onChange={setDate}
-//     animateYearScrolling
-//     disablePast='true'
-//     minutesStep={5}
-//     box-sizing='border-box'
-//   />
-// </div>
-// </div>

@@ -43,12 +43,12 @@ const BigCalendar = ({
         />
       </div>
       <div className='fixed-action-btn'>
-        <a
+        <span
           className='btn-floating btn-large blue modal-trigger'
           onClick={() => setOpenAddApptModal(!openAddApptModal)}
         >
           <i className='fas fa-plus'></i>
-        </a>
+        </span>
       </div>
       <AddApptModal
         isOpen={openAddApptModal}
